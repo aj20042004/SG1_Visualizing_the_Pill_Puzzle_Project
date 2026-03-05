@@ -18,6 +18,8 @@
 #   matplotlib: for histogram
 #   Python random.randint() 
 #   ChatGPT: used for chart styling, line structuring, progress bar implementation, and error checking(found minor syntax errors, such as switching W with H, and calculation errors)
+#   w3 schools: used to lookup syntax for dictionary use and function declorations, along with parameter passing
+# FOR TESTING ON THONNY, TOOLS->MANAGE PACKAGES-> SEARCH AND INSTALL matplotlib. THIS ENSURES THE GRAPHS / HISTOGRAMS OUTPUT.
 
 import random
 import math
@@ -254,4 +256,5 @@ if __name__ == "__main__":
     
     compute_half_draw_probability(half_draw_count, R)
     
+
     compute_sequence_probability(4, 100000)
