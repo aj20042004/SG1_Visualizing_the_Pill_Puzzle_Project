@@ -1,3 +1,24 @@
+# This program was developed using Python on Visual Studio Code, and tested on Thonny.
+# Daniel McKinnis, AJ Soma Ravichandran, Matthew Yeager, and Jacob Young
+# Date started: 02/25/2026 Date Submitted: 03/09/2026
+# CS 4500
+# This program is designed to taker user input for number of pills, number of simulation, and a day to track
+# This input is checked to ensure appropriate integer values
+# The program then simulated the Pill Puzzle question. Starting with N pills, and running R simulations. 
+# Each pill is drawn at random. If it is a whole pill, split it in half, take half, and put it back in the bottle. If its a half pill, take it.
+# The program answers 3 questions:
+#   Q1: Expected number of whole and half pills on given day D.
+#   Q2: Which day is most likely the day the last whole pill is taken?
+#   Q3: Probability of drawing a hlaf pill on day D.
+# The program also displays the possible draw sequence to demonstrate probabilities to users.
+# THe data structures used are:
+#   - day_freq: a list of length 2*N+1 where day_freq[d] counts how many simulations had their last whole pill taken on day d. Index 0 is unused
+#   - results: a dictionary mapping each draw seuqence to its frequency count across R simulations
+# Outside resources used:
+#   matplotlib: for histogram
+#   Python random.randint() 
+#   ChatGPT: used for chart styling, line structuring, progress bar implementation, and error checking(found minor syntax errors, such as switching W with H, and calculation errors)
+
 import random
 import math
 import sys
@@ -16,7 +37,7 @@ def simulate(N, D=None, return_sequence=False):
     sequence = "" if return_sequence else None
 
     for day in range(1, 2 * N + 1):
-        
+
         total = W + H
         RandomPick = random.randint(1, total)
         
