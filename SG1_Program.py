@@ -214,15 +214,50 @@ def compute_sequence_probability(N,R):
         print(f"{seq:<12} | {count:<12} | {prob:>6.2f}%")
         
 
+# Prompt user until they enter a valid integer in [min_val, max_val].
+# Handles and distinguishes between:
+#   -Empty input
+#   -Non-integer input (letters, decimals, symbols)
+#   -Out-of-range integers
+        
+def get_valid_int(prompt: str, min_val: int, max_val: int) -> int:
+    while True:
+        s = input(prompt).strip()
+
+        if s == "":
+            print("  Error: No value entered. Please enter a whole number.")
+            continue
+
+        if not s.isdigit():
+            print("  Error: Invalid input. Please enter a whole number (no letters, decimals, or symbols).")
+            continue
+
+        value = int(s)
+
+        if not (min_val <= value <= max_val):
+            print(f"  Error: Value out of range. Please enter a number between {min_val} and {max_val} (inclusive).")
+            continue
+
+        return value
+        
+
 
 # MAIN
 # ==========================================================
 
 if __name__ == "__main__":
     
-    N = int(input("Enter the number of whole pills (N): "))
-    R = int(input("Enter the number of simulations (R): "))
-    D = int(input("Enter the day to analyze (D): "))
+    # One-screen intro
+    print("SG1: Pill Puzzle Simulator")
+    print("This program simulates the 'Pill Puzzle' R times for a bottle starting with N whole pills.")
+    print("It shows progress while running and collects statistics for later display.\n")
+    
+    N = get_valid_int("Enter the number of whole pills (N, 1-1000): ", 1, 1000)
+    print(f"N accepted: {N} (the bottle starts with {N} whole pills)\n")
+    R = get_valid_int("Enter the number of simulations (R, 1-10000): ", 1, 10000)
+    print(f"N accepted: {R} (the simulation will run {R} times)\n")
+    D = get_valid_int(f"Enter the day to analyze (D, 1-{2 * N}): ", 1, 2 * N)   
+    print(f"N accepted: {N} (day {D} will be checked)\n")
 
     totalWholePillOnDayD = 0
     totalHalfPillOnDayD = 0
