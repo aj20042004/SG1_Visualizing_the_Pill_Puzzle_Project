@@ -1,35 +1,95 @@
-# This program was developed using Python on Visual Studio Code, and tested on Thonny.
-# Daniel McKinnis, AJ Soma Ravichandran, Matthew Yeager, and Jacob Young
-# Date started: 02/25/2026 Date Submitted: 03/09/2026
-# CS 4500
-# This program is designed to taker user input for number of pills, number of simulation, and a day to track
-# This input is checked to ensure appropriate integer values
-# The program then simulated the Pill Puzzle question. Starting with N pills, and running R simulations. 
-# Each pill is drawn at random. If it is a whole pill, split it in half, take half, and put it back in the bottle. If its a half pill, take it.
-# The program answers 3 questions:
-#   Q1: Expected number of whole and half pills on given day D.
-#   Q2: Which day is most likely the day the last whole pill is taken?
-#   Q3: Probability of drawing a hlaf pill on day D.
-# The program also displays the possible draw sequence to demonstrate probabilities to users.
-# THe data structures used are:
-#   - day_freq: a list of length 2*N+1 where day_freq[d] counts how many simulations had their last whole pill taken on day d. Index 0 is unused
-#   - results: a dictionary mapping each draw seuqence to its frequency count across R simulations
-# Outside resources used:
-#   matplotlib: for histogram
-#   Python random.randint() 
-#   ChatGPT: used for chart styling, line structuring, progress bar implementation, and error checking(found minor syntax errors, such as switching W with H, and calculation errors)
-#   w3 schools: used to lookup syntax for dictionary use and function declorations, along with parameter passing
-# FOR TESTING ON THONNY, TOOLS->MANAGE PACKAGES-> SEARCH AND INSTALL matplotlib. THIS ENSURES THE GRAPHS / HISTOGRAMS OUTPUT.
+# This program was developed using Python in Visual Studio Code and tested in Thonny.
+#
+# Authors:
+# Daniel McKinnis, AJ Soma Ravichandran, Matthew Yeager, Jacob Young
+#
+# Course: CMP SCI 4500
+# Date Started: 02/25/2026
+# Date Submitted: 03/09/2026
+#
+# Program Description:
+# This program solves the Pill Puzzle simulation problem. It accepts user input for:
+#   1. The initial number of pills (N)
+#   2. The number of simulations to run (R)
+#   3. A specific day (D) to track
+#
+# All inputs are validated to ensure they are appropriate integer values.
+#
+# Simulation Logic:
+# The program starts with N whole pills and runs R simulations.
+# During each simulation, pills are drawn randomly from the bottle:
+#
+#   • If a whole pill is drawn:
+#       - The pill is split into two halves
+#       - One half is taken
+#       - The other half is returned to the bottle
+#
+#   • If a half pill is drawn:
+#       - The half pill is taken
+#
+# Questions Answered by the Program:
+#   Q1: What is the expected number of whole pills and half pills on a given day D?
+#   Q2: Which day is most likely to be the day the last whole pill is taken?
+#   Q3: What is the probability of drawing a half pill on day D?
+#
+# The program also displays possible draw sequences to help demonstrate
+# the probability distribution of outcomes to users.
+#
+# Data Structures Used:
+#
+#   day_freq:
+#       A list of length (2*N + 1) where day_freq[d] counts how many simulations
+#       had their last whole pill taken on day d.
+#       Index 0 is unused.
+#
+#   results:
+#       A dictionary that maps each draw sequence to its frequency count
+#       across all R simulations.
+#
+# External Resources Used:
+#
+#   matplotlib - 
+#       Used to generate histograms and charts.
+#
+#   Python random.randint() - 
+#       Used for random pill selection during simulation.
+#
+#   ChatGPT - 
+#       Assisted with chart styling, code structuring, and 
+#       error checking (minor syntax fixes such as variable swaps and
+#       calculation corrections).
+#
+#   W3Schools -
+#       Used as a reference for Python syntax, including dictionaries,
+#       function declarations, and parameter passing.
+#
+# Note for Running in Thonny:
+# To enable graph and histogram output:
+#   1. Go to Tools → Manage Packages
+#   2. Search for "matplotlib"
+#   3. Install the package
 
+# Import necessary libraries
 import random
-import math
 import sys
 import matplotlib.pyplot as plt
 
-# This function simulates the pill drawing process for N whole pills and D days. It returns the number of whole and half pills on day D, the day when whole pills run out,
-# and whether a half pill was drawn on day D. If return_sequence is True, it also returns the sequence of draws (W for whole, H for half) for all days.
+
+# This function simulates the pill drawing process starting with N whole pills.
+# The simulation runs until all pills have been consumed.
+#
+# The function tracks:
+#   - The number of whole pills and half pills remaining on day D
+#   - The day when the last whole pill is taken
+#   - Whether a half pill was drawn on day D
+#
+# If return_sequence is set to True, the function also returns the full
+# sequence of draws for the entire simulation, where:
+#   W = whole pill drawn
+#   H = half pill drawn
 def simulate(N, D=None, return_sequence=False):
     
+    # Initialize the bottle with N whole pills and 0 half pills
     W = N
     H = 0
     WholePillsOnDayD = 0
@@ -38,37 +98,47 @@ def simulate(N, D=None, return_sequence=False):
     DayWholeZero = None
     sequence = "" if return_sequence else None
 
+    # Simulate the process for 2*N days (maximum possible duration)
     for day in range(1, 2 * N + 1):
 
         total = W + H
         RandomPick = random.randint(1, total)
         
+        # If the random pick is less than or equal to the number of whole pills, we draw a whole pill.
         if RandomPick <= W:
             W -= 1
             H += 1
             DrawHalf = False
             if return_sequence:
                 sequence += "W"
+                
+        # If the random pick is greater than the number of whole pills, we draw a half pill.
         else:
             H -= 1
             DrawHalf = True
             if return_sequence:
                 sequence += "H"
-
+        
+        # Check if we are on day D to record the number of whole and half pills, and whether a half pill was drawn.
         if D is not None and day == D:
             WholePillsOnDayD = W
             HalfPillsOnDayD = H
             if DrawHalf:
                 HalfDrawOnDayD = True
 
+        # Check if all whole pills have been taken and record the day if this is the first time it happens.
         if W == 0 and DayWholeZero is None:
             DayWholeZero = day
     
+    # If return_sequence is True, we return the collected statistics along with the full sequence of draws.
     if return_sequence:
         return WholePillsOnDayD, HalfPillsOnDayD, DayWholeZero, HalfDrawOnDayD, sequence
 
+    # If return_sequence is False, we return only the statistics without the sequence.
     return WholePillsOnDayD, HalfPillsOnDayD, DayWholeZero, HalfDrawOnDayD
 
+
+# Displays a progress bar in the console showing the percentage of simulations completed.
 def progress_bar(current, total, bar_length=40):
     percent = current / total
     filled = int(bar_length * percent)
@@ -79,7 +149,10 @@ def progress_bar(current, total, bar_length=40):
     if current == total:
         print()  # Move to next line when done
 
-# Question 1: Expected pill counts on day D
+
+# The function calculates the expected number of whole pills and half pills remaining on a specified day D. 
+# The totals collected from all simulations are divided by the total number of simulations (R) to compute 
+# the average values. The results are printed to the console in a clear format for the user to interpret.
 def expected_WH_on_day_d(TotalWonD, TotalHonD, R):
     avg_whole = TotalWonD / R
     avg_half  = TotalHonD / R
@@ -87,7 +160,15 @@ def expected_WH_on_day_d(TotalWonD, TotalHonD, R):
     print(f"  Expected whole pills: {avg_whole:.4f}")
     print(f"  Expected half  pills: {avg_half:.4f}")
 
-# Question 2: Most likely day to run out of whole pills
+
+# This function analyzes the frequency data for the day when the last whole pill was taken.
+# Using the day frequency list, the function determines:
+#   - The earliest possible day (minimum)
+#   - The latest possible day (maximum)
+#   - The average day across all simulations
+#   - The most likely day (mode) based on highest frequency
+# These statistics are displayed to the user and returned for use in
+# visualizations such as the histogram. 
 def compute_last_whole_pill_day(day_freq, R):
     print("\n--- Question 2: Analysis of Last Whole Pill Day ---")
 
@@ -111,7 +192,10 @@ def compute_last_whole_pill_day(day_freq, R):
     return avg_day, most_likely_day, min_day, max_day
     
 
-
+# The function generates and displays a histogram that visualizes the distribution of the day when
+# the last whole pill was taken across all simulations. The histogram highlights important statistics
+# such as the minimum day, maximum day, average day, and the most likely day using vertical lines
+# and annotations to help users easily interpret the results.
 def plot_last_whole_histogram(day_freq, N, avg_day, most_likely_day, min_day, max_day):
     
     print("\nDisplaying histogram...")
@@ -127,7 +211,7 @@ def plot_last_whole_histogram(day_freq, N, avg_day, most_likely_day, min_day, ma
     bars[most_likely_day - 1].set_facecolor("#E8825A")
     bars[most_likely_day - 1].set_edgecolor("#C0583A")
 
-    # --- Vertical reference lines ---
+    # Vertical reference lines
     line_cfg = [
         ("Min",         min_day,         "#2ECC71", "--", 1.8),
         ("Max",         max_day,         "#E74C3C", "--", 1.8),
@@ -140,17 +224,21 @@ def plot_last_whole_histogram(day_freq, N, avg_day, most_likely_day, min_day, ma
         ax.axvline(x=xval, color=color, linestyle=ls, linewidth=lw,
                    label=f"{label}: {display}", zorder=3)
 
-    # --- Annotations floating above each line ---
+    # Annotations floating above each line with a small gap
     ymax = max(frequencies) * 1.02
-    top_gap = ymax * 0.03  # small gap above annotation baseline
+    
+    # small gap above annotation baseline
+    top_gap = ymax * 0.03  
 
+    # Define annotations for each statistic with appropriate colors and alignment
     annotation = [
         (min_day,         "#2ECC71", f"Min\n{min_day}",          "right"),
         (max_day,         "#E74C3C", f"Max\n{max_day}",          "left"),
         (avg_day,         "#F39C12", f"Avg\n{avg_day:.2f}",      "right"),
         (most_likely_day, "#C0583A", f"Mode\n{most_likely_day}", "left"),
     ]
-
+    
+    # Loop through each annotation and place it above the corresponding line with a styled background box
     for x_val, color, text, ha in annotation:
         ax.text(x_val, ymax + top_gap, text,
                 color=color, fontsize=8.5, fontweight="bold",
@@ -162,6 +250,7 @@ def plot_last_whole_histogram(day_freq, N, avg_day, most_likely_day, min_day, ma
     ax.set_ylim(0, ymax * 1.22)
     ax.set_xlim(0.5, 2 * N + 0.5)
 
+    # Chart styling
     ax.set_xlabel("Day", fontsize=12, labelpad=6)
     ax.set_ylabel("Frequency", fontsize=12, labelpad=6)
     ax.set_title("Distribution of Day When Last Whole Pill Was Taken",
@@ -175,10 +264,8 @@ def plot_last_whole_histogram(day_freq, N, avg_day, most_likely_day, min_day, ma
     plt.show()
     
     
-# ----------------------------------------------------------
-# Question 3: Calculates half-draw probability on day D
-# ----------------------------------------------------------
-
+# The function calculates and prints the probability of drawing a half pill
+# on the specified day D based on simulation results.
 def compute_half_draw_probability(half_draw_count, R):
 
     # Probability estimate = (# times half drawn on day D) / (total simulations)
@@ -190,8 +277,10 @@ def compute_half_draw_probability(half_draw_count, R):
     
 
     
-# This function is for demonstrating the non-uniform distribution of sequences for N=4. When the R is small, the chances could be more equally likely, 
-# but as R increases, we will see that propbaility of sequences are not equally likely, and some sequences will occur more frequently than others.
+# The function demonstrates that the possible pill-draw sequences are not uniformly distributed. 
+# For a given number of pills (N) and simulations (R), the function runs simulations and records how often 
+# each sequence of draws occurs. The results are then sorted by frequency and displayed along with their probabilities 
+# to show that some sequences occur more often than others.
 def compute_sequence_probability(N,R):
 
     results = {}
@@ -214,57 +303,103 @@ def compute_sequence_probability(N,R):
         print(f"{seq:<12} | {count:<12} | {prob:>6.2f}%")
         
 
-# Prompt user until they enter a valid integer in [min_val, max_val].
-# Handles and distinguishes between:
-#   -Empty input
-#   -Non-integer input (letters, decimals, symbols)
-#   -Out-of-range integers
-        
+# Prompts the user to enter a valid integer within a specified range.
+# The function repeatedly asks for input until a correct value is provided.
+# It handles several types of invalid input, including:
+#   - Empty input
+#   - Non-integer input (letters, decimals, symbols)
+#   - Integers outside the allowed range
+# Once a valid value is entered, the function returns the integer. 
 def get_valid_int(prompt: str, min_val: int, max_val: int) -> int:
+    
     while True:
+        
         s = input(prompt).strip()
 
         if s == "":
-            print("  Error: No value entered. Please enter a whole number.")
+            print("Error: No value entered. Please enter a whole number.\n")
             continue
 
         if not s.isdigit():
-            print("  Error: Invalid input. Please enter a whole number (no letters, decimals, or symbols).")
+            print("Error: Invalid input. Please enter a whole number (no letters, decimals, negative numbers or symbols).\n")
             continue
 
         value = int(s)
 
         if not (min_val <= value <= max_val):
-            print(f"  Error: Value out of range. Please enter a number between {min_val} and {max_val} (inclusive).")
+            print(f"Error: Value out of range. Please enter a number between {min_val} and {max_val} (inclusive).\n")
             continue
 
         return value
         
 
 
+# =====================================================================================================================================
 # MAIN
-# ==========================================================
+# =====================================================================================================================================
 
 if __name__ == "__main__":
     
-    # One-screen intro
+    # Welcome message and input prompts
+    print("\n")
+    print("-" * 100)
     print("SG1: Pill Puzzle Simulator")
-    print("This program simulates the 'Pill Puzzle' R times for a bottle starting with N whole pills.")
-    print("It shows progress while running and collects statistics for later display.\n")
+    print("-" * 100)
     
-    N = get_valid_int("Enter the number of whole pills (N, 1-1000): ", 1, 1000)
-    print(f"N accepted: {N} (the bottle starts with {N} whole pills)\n")
-    R = get_valid_int("Enter the number of simulations (R, 1-10000): ", 1, 10000)
-    print(f"N accepted: {R} (the simulation will run {R} times)\n")
-    D = get_valid_int(f"Enter the day to analyze (D, 1-{2 * N}): ", 1, 2 * N)   
-    print(f"N accepted: {N} (day {D} will be checked)\n")
+    print(
+"""This program explores the classic probability problem known as the "Pill Puzzle".
 
+You start with a bottle containing N whole pills. Each day you must take half of a pill.
+The bottle is assumed to be random: whenever you reach in, each pill (whole or half)
+remaining in the bottle has an equal chance of being selected.
+
+Daily process:
+• If a whole pill is selected:
+  - The pill is split into two halves
+  - One half is taken
+  - The other half is returned to the bottle
+
+• If a half pill is selected:
+  - The half pill is taken and nothing is returned to the bottle
+
+This process continues for 2 * N days until all pills have been consumed.
+
+The program runs this experiment many times using computer simulation and
+collects statistics to help answer several probability questions, including:
+
+1. The expected number of whole pills and half pills remaining on a chosen day.
+2. Which day is most likely to be the day when the last whole pill is taken.
+3. The probability of drawing a half pill on a chosen day.
+
+The program will also display a histogram showing when the last whole pill
+was taken across all simulations.
+
+You will now be asked to enter:
+• N - the number of whole pills in the bottle
+• R - the number of simulations to run
+• D - the day to analyze
+
+After all simulations finish, the program will display the results.
+"""
+)
+    
+    # Get user inputs with validation
+    N = get_valid_int("Enter the number of whole pills (must be between 1 and 1000): ", 1, 1000)
+    print(f"Input accepted: {N} whole pills will be placed in the bottle.\n")
+    
+    R = get_valid_int("Enter the number of simulations to run (must be between 1 and 10000): ", 1, 10000)
+    print(f"Input accepted: The simulation will run {R} times.\n")
+    
+    D = get_valid_int(f"Enter the day to analyze (1–{2 * N}): ", 1, 2 * N)
+    print(f"Input accepted: Statistics will be calculated for day {D}.\n")
+
+    # Initialize variables for statistics
     totalWholePillOnDayD = 0
     totalHalfPillOnDayD = 0
     half_draw_count = 0
-
     day_freq = [0] * (2 * N + 1)
 
+    # Run R simulations and collect statistics for each simulation
     for i in range(1, R + 1):
 
         WholePillsOnDayD, HalfPillsOnDayD, DayWholeZero, HalfDrawOnDayD = simulate(N, D)
@@ -283,13 +418,13 @@ if __name__ == "__main__":
         if i % step == 0 or i == R:
             progress_bar(i, R)
     
+    # Analyze and display results for Q1, Q2, Q3, and sequence probabilities
     expected_WH_on_day_d(totalWholePillOnDayD, totalHalfPillOnDayD, R)
-    
     avg_day, most_likely_day, min_day, max_day = compute_last_whole_pill_day(day_freq, R)
-    
     plot_last_whole_histogram(day_freq, N, avg_day, most_likely_day, min_day, max_day)
-    
     compute_half_draw_probability(half_draw_count, R)
-    
-
     compute_sequence_probability(4, 100000)
+    
+    # End of program message
+    print("\nAll simulations completed.")
+    input("Press ENTER to end the program.")
