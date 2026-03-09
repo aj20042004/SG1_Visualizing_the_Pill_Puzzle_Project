@@ -1,4 +1,4 @@
-# This program was developed using Python in Visual Studio Code and tested in Thonny.
+# Developed using Python in Visual Studio Code and tested in Thonny.
 #
 # Authors:
 # Daniel McKinnis, AJ Soma Ravichandran, Matthew Yeager, Jacob Young
@@ -8,66 +8,35 @@
 # Date Submitted: 03/09/2026
 #
 # Program Description:
-# This program solves the Pill Puzzle simulation problem. It accepts user input for:
-#   1. The initial number of pills (N)
-#   2. The number of simulations to run (R)
-#   3. A specific day (D) to track
-#
-# All inputs are validated to ensure they are appropriate integer values.
+# This program simulates the Pill Puzzle. It accepts user input for:
+#   1. Initial number of pills (N)
+#   2. Number of simulations (R)
+#   3. Specific day to track (D)
+# All inputs are validated to ensure they are valid integers.
 #
 # Simulation Logic:
-# The program starts with N whole pills and runs R simulations.
-# During each simulation, pills are drawn randomly from the bottle:
+# The simulation starts with N whole pills. In each draw:
+#   • Whole pill → split into two halves, one half taken, one half returned.
+#   • Half pill  → taken from the bottle.
 #
-#   • If a whole pill is drawn:
-#       - The pill is split into two halves
-#       - One half is taken
-#       - The other half is returned to the bottle
+# Questions Answered:
+#   Q1: Expected number of whole and half pills on day D.
+#   Q2: Most likely day the last whole pill is taken.
+#   Q3: Probability of drawing a half pill on day D.
 #
-#   • If a half pill is drawn:
-#       - The half pill is taken
+# Data Structures:
+#   day_freq – List where day_freq[d] counts simulations where the last whole pill
+#              was taken on day d.
+#   results  – Dictionary mapping draw sequences to their frequency.
 #
-# Questions Answered by the Program:
-#   Q1: What is the expected number of whole pills and half pills on a given day D?
-#   Q2: Which day is most likely to be the day the last whole pill is taken?
-#   Q3: What is the probability of drawing a half pill on day D?
+# External Resources:
+#   matplotlib – Used for charts and histograms.
+#   random.randint() – Used for random pill selection.
+#   ChatGPT – Assisted with chart formatting, structure, and minor syntax fixes.
+#   W3Schools – Referenced for Python syntax and dictionaries.
 #
-# The program also displays possible draw sequences to help demonstrate
-# the probability distribution of outcomes to users.
-#
-# Data Structures Used:
-#
-#   day_freq:
-#       A list of length (2*N + 1) where day_freq[d] counts how many simulations
-#       had their last whole pill taken on day d.
-#       Index 0 is unused.
-#
-#   results:
-#       A dictionary that maps each draw sequence to its frequency count
-#       across all R simulations.
-#
-# External Resources Used:
-#
-#   matplotlib - 
-#       Used to generate histograms and charts.
-#
-#   Python random.randint() - 
-#       Used for random pill selection during simulation.
-#
-#   ChatGPT - 
-#       Assisted with chart styling, code structuring, and 
-#       error checking (minor syntax fixes such as variable swaps and
-#       calculation corrections).
-#
-#   W3Schools -
-#       Used as a reference for Python syntax, including dictionaries,
-#       function declarations, and parameter passing.
-#
-# Note for Running in Thonny:
-# To enable graph and histogram output:
-#   1. Go to Tools → Manage Packages
-#   2. Search for "matplotlib"
-#   3. Install the package
+# Note for Thonny Users:
+# Install matplotlib via Tools → Manage Packages → Search "matplotlib".
 
 # Import necessary libraries
 import random
