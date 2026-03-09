@@ -323,12 +323,12 @@ The bottle is assumed to be random: whenever you reach in, each pill (whole or h
 remaining in the bottle has an equal chance of being selected.
 
 Daily process:
-• If a whole pill is selected:
+1. If a whole pill is selected:
   - The pill is split into two halves
   - One half is taken
   - The other half is returned to the bottle
 
-• If a half pill is selected:
+2. If a half pill is selected:
   - The half pill is taken and nothing is returned to the bottle
 
 This process continues for 2 * N days until all pills have been consumed.
@@ -344,9 +344,9 @@ The program will also display a histogram showing when the last whole pill
 was taken across all simulations.
 
 You will now be asked to enter:
-• N - the number of whole pills in the bottle
-• R - the number of simulations to run
-• D - the day to analyze
+1. N - the number of whole pills in the bottle
+2. R - the number of simulations to run
+3. D - the day to analyze
 
 After all simulations finish, the program will display the results.
 """
