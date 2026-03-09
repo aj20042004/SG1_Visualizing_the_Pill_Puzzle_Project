@@ -16,8 +16,8 @@
 #
 # Simulation Logic:
 # The simulation starts with N whole pills. In each draw:
-#   • Whole pill → split into two halves, one half taken, one half returned.
-#   • Half pill  → taken from the bottle.
+#   1. Whole pill - split into two halves, one half taken, one half returned.
+#   2. Half pill  - taken from the bottle.
 #
 # Questions Answered:
 #   Q1: Expected number of whole and half pills on day D.
@@ -25,18 +25,18 @@
 #   Q3: Probability of drawing a half pill on day D.
 #
 # Data Structures:
-#   day_freq – List where day_freq[d] counts simulations where the last whole pill
+#   day_freq - List where day_freq[d] counts simulations where the last whole pill
 #              was taken on day d.
-#   results  – Dictionary mapping draw sequences to their frequency.
+#   results  - Dictionary mapping draw sequences to their frequency.
 #
 # External Resources:
-#   matplotlib – Used for charts and histograms.
-#   random.randint() – Used for random pill selection.
-#   ChatGPT – Assisted with chart formatting, structure, and minor syntax fixes.
-#   W3Schools – Referenced for Python syntax and dictionaries.
+#   matplotlib - Used for charts and histograms.
+#   random.randint() - Used for random pill selection.
+#   ChatGPT - Assisted with chart formatting, structure, and minor syntax fixes.
+#   W3Schools - Referenced for Python syntax and dictionaries.
 #
 # Note for Thonny Users:
-# Install matplotlib via Tools → Manage Packages → Search "matplotlib".
+# Install matplotlib via Tools -> Manage Packages -> Search "matplotlib".
 
 # Import necessary libraries
 import random
